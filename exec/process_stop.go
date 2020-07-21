@@ -44,6 +44,18 @@ func NewStopProcessActionCommandSpec() spec.ExpActionCommandSpec {
 			},
 			ActionFlags:    []spec.ExpFlagSpec{},
 			ActionExecutor: &StopProcessExecutor{},
+			ActionExample: spec.Example{
+				ExampleCommands: []spec.ExampleCommand{
+					{
+						Annotation: "Pause the process that contains the `SimpleHTTPServer` keyword",
+						Command: "blade create process stop --process SimpleHTTPServer",
+					},
+					{
+						Annotation: "Pause the Java process",
+						Command: "blade create process stop --process-cmd java",
+					},
+				},
+			},
 		},
 	}
 }
@@ -60,7 +72,10 @@ func (*StopProcessActionCommandSpec) ShortDesc() string {
 	return "process fake death"
 }
 
-func (*StopProcessActionCommandSpec) LongDesc() string {
+func (s *StopProcessActionCommandSpec) LongDesc() string {
+	if s.ActionLongDesc != "" {
+		return s.ActionLongDesc
+	}
 	return "process fake death by process id or process name"
 }
 

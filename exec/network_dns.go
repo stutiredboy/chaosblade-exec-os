@@ -49,6 +49,14 @@ func NewDnsActionSpec() spec.ExpActionCommandSpec {
 				},
 			},
 			ActionExecutor: &NetworkDnsExecutor{},
+			ActionExample: spec.Example{
+				ExampleCommands: []spec.ExampleCommand{
+					{
+						Annotation: "The domain name www.baidu.com is not accessible",
+						Command: "blade create network dns --domain www.baidu.com --ip 10.0.0.0",
+					},
+				},
+			},
 		},
 	}
 }
@@ -65,7 +73,10 @@ func (*DnsActionSpec) ShortDesc() string {
 	return "Dns experiment"
 }
 
-func (*DnsActionSpec) LongDesc() string {
+func (d *DnsActionSpec) LongDesc() string {
+	if d.ActionLongDesc != "" {
+		return d.ActionLongDesc
+	}
 	return "Dns experiment"
 }
 

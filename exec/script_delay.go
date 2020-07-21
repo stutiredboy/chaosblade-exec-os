@@ -41,6 +41,15 @@ func NewScriptDelayActionCommand() spec.ExpActionCommandSpec {
 				},
 			},
 			ActionExecutor: &ScriptDelayExecutor{},
+			ActionExample: spec.Example{
+				ExampleCommands: []spec.ExampleCommand{
+					{
+						Annotation: "Add commands to the script `start0() { sleep 10.000000 ...}`",
+						Command: "blade create script delay --time 10000 --file test.sh --function-name start0",
+						CommandResult: "",
+					},
+				},
+			},
 		},
 	}
 }
@@ -57,7 +66,10 @@ func (*ScriptDelayActionCommand) ShortDesc() string {
 	return "Script executed delay"
 }
 
-func (*ScriptDelayActionCommand) LongDesc() string {
+func (s *ScriptDelayActionCommand) LongDesc() string {
+	if s.ActionLongDesc != "" {
+		return s.ActionLongDesc
+	}
 	return "Sleep in script"
 }
 
