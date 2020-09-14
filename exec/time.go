@@ -17,13 +17,7 @@
 package exec
 
 import (
-	"context"
-	"fmt"
-	"path"
-
-	"github.com/chaosblade-io/chaosblade-spec-go/channel"
 	"github.com/chaosblade-io/chaosblade-spec-go/spec"
-	"github.com/chaosblade-io/chaosblade-spec-go/util"
 )
 
 // TimeCommandModelSpec is time model spec
@@ -36,21 +30,10 @@ func NewTimeCommandModelSpec() spec.ExpModelCommandSpec {
 	return &TimeCommandModelSpec{
 		spec.BaseExpModelCommandSpec{
 			ExpActions: []spec.ExpActionCommandSpec{
-				&setTimeActionCommand{
-					spec.BaseExpActionCommandSpec{
-						ActionMatchers: []spec.ExpFlagSpec{},
-						ActionFlags:    []spec.ExpFlagSpec{},
-						ActionExecutor: &timeExecutor{},
-					},
-				},
+        NewSetTimeActionCommandSpec(),
+        NewSetTimeZoneActionCommandSpec(),
 			},
-			ExpFlags: []spec.ExpFlagSpec{
-				&spec.ExpFlag{
-					Name:     "datetime",
-					Desc:     "datetime to set, such as '2020-09-09 16:53:00'",
-					Required: true,
-				},
-			},
+			ExpFlags: []spec.ExpFlagSpec{},
 		},
 	}
 }
@@ -69,89 +52,4 @@ func (*TimeCommandModelSpec) LongDesc() string {
 
 func (*TimeCommandModelSpec) Example() string {
 	return "time settime --datetime='2020-09-09 16:48:00'"
-}
-
-// setTimeActionCommand is the Action to run in time executor
-type setTimeActionCommand struct {
-	spec.BaseExpActionCommandSpec
-}
-
-func (*setTimeActionCommand) Name() string {
-	return "settime"
-}
-
-func (*setTimeActionCommand) Aliases() []string {
-	return []string{}
-}
-
-func (*setTimeActionCommand) ShortDesc() string {
-	return "settime action"
-}
-
-func (*setTimeActionCommand) LongDesc() string {
-	return "set OS time to specific date time"
-}
-
-func (*setTimeActionCommand) Matchers() []spec.ExpFlagSpec {
-	return []spec.ExpFlagSpec{}
-}
-
-func (*setTimeActionCommand) Flags() []spec.ExpFlagSpec {
-	return []spec.ExpFlagSpec{}
-}
-
-// timeExecutor is one of the OS executor
-type timeExecutor struct {
-	channel spec.Channel
-}
-
-func (te *timeExecutor) Name() string {
-	return "time"
-}
-
-func (te *timeExecutor) SetChannel(channel spec.Channel) {
-	te.channel = channel
-}
-
-// setTimeBin is the command of settime
-const setTimeBin = "chaos_settime"
-
-func (te *timeExecutor) Exec(uid string, ctx context.Context, model *spec.ExpModel) *spec.Response {
-	err := checkTimeExpEnv()
-	if err != nil {
-		return spec.ReturnFail(spec.Code[spec.CommandNotFound], err.Error())
-	}
-	if te.channel == nil {
-		return spec.ReturnFail(spec.Code[spec.ServerError], "channel is nil")
-	}
-	dateTime := model.ActionFlags["datetime"]
-	if _, ok := spec.IsDestroy(ctx); ok {
-		return te.stop(ctx)
-	}
-
-	return te.start(ctx, dateTime)
-}
-
-func (te *timeExecutor) start(ctx context.Context, dateTime string) *spec.Response {
-	args := fmt.Sprintf("--start --debug=%t --datetime='%s'", util.Debug, dateTime)
-	return te.channel.Run(ctx, path.Join(te.channel.GetScriptPath(), setTimeBin), args)
-}
-
-func (te *timeExecutor) stop(ctx context.Context) *spec.Response {
-	args := fmt.Sprintf("--stop --debug=%t", util.Debug)
-	return te.channel.Run(ctx, path.Join(te.channel.GetScriptPath(), setTimeBin), args)
-}
-
-// checkTimeExpEnv check the commands depended exists or not.
-func checkTimeExpEnv() error {
-	commands := []string{"timedatectl"}
-	for _, command := range commands {
-		if !channel.NewLocalChannel().IsCommandAvailable(command) {
-			return fmt.Errorf("%s command not found", command)
-		}
-	}
-	if channel.NewLocalChannel().IsCommandAvailable("ntpd") {
-		return fmt.Errorf("only support systemd-timesyncd, so ntpd should no be installed")
-	}
-	return nil
 }
