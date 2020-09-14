@@ -55,7 +55,10 @@ var cl = channel.NewLocalChannel()
 
 func doSetDateTime(datetime string) {
 	var ctx = context.WithValue(context.Background(), channel.ExcludeProcessKey, "blade")
-	args := fmt.Sprintf("set-ntp false && timedatectl set-time '%s'", datetime)
+	// systemd may need few seconds to stop systemd-timesyncd service
+	args := fmt.Sprintf(`--no-pager --no-ask-password set-ntp false && \
+		sleep 5 && \
+		timedatectl --no-pager --no-ask-password set-time "%s"`, datetime)
 	response := channel.NewLocalChannel().Run(ctx, "timedatectl", args)
 	if !response.Success {
 		bin.PrintErrAndExit(response.Err)
@@ -65,7 +68,7 @@ func doSetDateTime(datetime string) {
 
 func doClearDateTime() {
 	var ctx = context.WithValue(context.Background(), channel.ExcludeProcessKey, "blade")
-	args := fmt.Sprintf("set-ntp true")
+	args := fmt.Sprintf("--no-pager --no-ask-password set-ntp true")
 	response := channel.NewLocalChannel().Run(ctx, "timedatectl", args)
 	if !response.Success {
 		bin.PrintErrAndExit(response.Err)

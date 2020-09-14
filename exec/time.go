@@ -133,7 +133,7 @@ func (te *timeExecutor) Exec(uid string, ctx context.Context, model *spec.ExpMod
 }
 
 func (te *timeExecutor) start(ctx context.Context, dateTime string) *spec.Response {
-	args := fmt.Sprintf("--start --debug=%t --datetime=%s", util.Debug, dateTime)
+	args := fmt.Sprintf("--start --debug=%t --datetime='%s'", util.Debug, dateTime)
 	return te.channel.Run(ctx, path.Join(te.channel.GetScriptPath(), setTimeBin), args)
 }
 
