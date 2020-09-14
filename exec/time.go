@@ -36,7 +36,7 @@ func NewTimeCommandModelSpec() spec.ExpModelCommandSpec {
 	return &TimeCommandModelSpec{
 		spec.BaseExpModelCommandSpec{
 			ExpActions: []spec.ExpActionCommandSpec{
-				&setActionCommand{
+				&setTimeActionCommand{
 					spec.BaseExpActionCommandSpec{
 						ActionMatchers: []spec.ExpFlagSpec{},
 						ActionFlags:    []spec.ExpFlagSpec{},
@@ -71,32 +71,32 @@ func (*TimeCommandModelSpec) Example() string {
 	return "time set --datetime='2020-09-09 16:48:00'"
 }
 
-// setActionCommand is the Action to run in time executor
-type setActionCommand struct {
+// setTimeActionCommand is the Action to run in time executor
+type setTimeActionCommand struct {
 	spec.BaseExpActionCommandSpec
 }
 
-func (*setActionCommand) Name() string {
-	return "set"
+func (*setTimeActionCommand) Name() string {
+	return "settime"
 }
 
-func (*setActionCommand) Aliases() []string {
+func (*setTimeActionCommand) Aliases() []string {
 	return []string{}
 }
 
-func (*setActionCommand) ShortDesc() string {
-	return "time set"
+func (*setTimeActionCommand) ShortDesc() string {
+	return "time set action"
 }
 
-func (*setActionCommand) LongDesc() string {
+func (*setTimeActionCommand) LongDesc() string {
 	return "set OS time to specific date time"
 }
 
-func (*setActionCommand) Matchers() []spec.ExpFlagSpec {
+func (*setTimeActionCommand) Matchers() []spec.ExpFlagSpec {
 	return []spec.ExpFlagSpec{}
 }
 
-func (*setActionCommand) Flags() []spec.ExpFlagSpec {
+func (*setTimeActionCommand) Flags() []spec.ExpFlagSpec {
 	return []spec.ExpFlagSpec{}
 }
 
