@@ -133,7 +133,7 @@ func (te *timeExecutor) Exec(uid string, ctx context.Context, model *spec.ExpMod
 }
 
 func (te *timeExecutor) start(ctx context.Context, dateTime string) *spec.Response {
-	args := fmt.Sprintf("--start --debug=%t --datetime %s", util.Debug, dateTime)
+	args := fmt.Sprintf("--start --debug=%t --datetime=%s", util.Debug, dateTime)
 	return te.channel.Run(ctx, path.Join(te.channel.GetScriptPath(), setTimeBin), args)
 }
 
@@ -144,11 +144,14 @@ func (te *timeExecutor) stop(ctx context.Context) *spec.Response {
 
 // checkTimeExpEnv check the commands depended exists or not.
 func checkTimeExpEnv() error {
-	commands := []string{"date", "ntpd", "ntpdate"}
+	commands := []string{"timedatectl"}
 	for _, command := range commands {
 		if !channel.NewLocalChannel().IsCommandAvailable(command) {
 			return fmt.Errorf("%s command not found", command)
 		}
+	}
+	if channel.NewLocalChannel().IsCommandAvailable("ntpd") {
+		return fmt.Errorf("only support systemd-timesyncd, so ntpd should no be installed")
 	}
 	return nil
 }
