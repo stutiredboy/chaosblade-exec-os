@@ -32,19 +32,19 @@ type SetTimeZoneActionCommandSpec struct {
 }
 
 func NewSetTimeZoneActionCommandSpec() spec.ExpActionCommandSpec {
-  return &SetTimeZoneActionCommandSpec{
-    spec.BaseExpActionCommandSpec{
-      ActionMatchers:  []spec.ExpFlagSpec{},
-      ActionFlags: []spec.ExpFlagSpec{
-        &spec.ExpFlag{
-          Name:     "timezone",
-          Desc:     "timezone, such as: Asia/Hong_kong",
-          Required: true,
-        },
-      },
-      ActionExecutor: &TimeZoneExecutor{},
-    },
-  }
+	return &SetTimeZoneActionCommandSpec{
+		spec.BaseExpActionCommandSpec{
+			ActionMatchers: []spec.ExpFlagSpec{},
+			ActionFlags: []spec.ExpFlagSpec{
+				&spec.ExpFlag{
+					Name:     "timezone",
+					Desc:     "timezone, such as: Asia/Hong_kong",
+					Required: true,
+				},
+			},
+			ActionExecutor: &TimeZoneExecutor{},
+		},
+	}
 }
 
 func (*SetTimeZoneActionCommandSpec) Name() string {

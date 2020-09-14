@@ -35,15 +35,15 @@ type SetTimeActionCommandSpec struct {
 func NewSetTimeActionCommandSpec() spec.ExpActionCommandSpec {
 	return &SetTimeActionCommandSpec{
 		spec.BaseExpActionCommandSpec{
-      ActionMatchers:     []spec.ExpFlagSpec{},
-      ActionFlags:        []spec.ExpFlagSpec{
-        &spec.ExpFlag{
-          Name:     "datetime",
-          Desc:     "datetime to set, such as '2020-09-09 16:53:00'",
-          Required: true,
-        },
-      },
-      ActionExecutor: &TimeExecutor{},
+			ActionMatchers: []spec.ExpFlagSpec{},
+			ActionFlags: []spec.ExpFlagSpec{
+				&spec.ExpFlag{
+					Name:     "datetime",
+					Desc:     "datetime to set, such as '2020-09-09 16:53:00'",
+					Required: true,
+				},
+			},
+			ActionExecutor: &TimeExecutor{},
 		},
 	}
 }

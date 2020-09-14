@@ -17,11 +17,11 @@
 package main
 
 import (
-  "os"
 	"context"
 	"flag"
 	"fmt"
-  "io/ioutil"
+	"io/ioutil"
+	"os"
 
 	"github.com/chaosblade-io/chaosblade-exec-os/exec/bin"
 	"github.com/chaosblade-io/chaosblade-spec-go/channel"
@@ -33,7 +33,7 @@ var setTimeZone, resetTimeZone bool
 
 func main() {
 	flag.StringVar(&dstTimeZone, "timezone", "", "timezone")
-  flag.StringVar(&expUid, "uid", "settz", "uid")
+	flag.StringVar(&expUid, "uid", "settz", "uid")
 	flag.BoolVar(&setTimeZone, "start", false, "set timezone to destination value")
 	flag.BoolVar(&resetTimeZone, "stop", false, "set timezone to the value before experiment")
 	bin.ParseFlagAndInitLog()
@@ -57,33 +57,33 @@ func main() {
 var cl = channel.NewLocalChannel()
 
 func doSetTimeZone(uid string, timezone string) {
-  ctx := context.Background()
-  tmpFile := fmt.Sprintf("/tmp/chaos-settz-%s.tmp", uid)
+	ctx := context.Background()
+	tmpFile := fmt.Sprintf("/tmp/chaos-settz-%s.tmp", uid)
 
-  // get current timezone and save it to tmpFile
-  response := cl.Run(ctx, "timedatectl", fmt.Sprintf(`| fgrep "Time zone:" | awk '{print $3}' > %s`, tmpFile))
-  if !response.Success {
-    bin.PrintErrAndExit(response.Err)
-  }
+	// get current timezone and save it to tmpFile
+	response := cl.Run(ctx, "timedatectl", fmt.Sprintf(`| fgrep "Time zone:" | awk '{print $3}' > %s`, tmpFile))
+	if !response.Success {
+		bin.PrintErrAndExit(response.Err)
+	}
 	args := fmt.Sprintf("--no-pager --no-ask-password set-timezone %s", timezone)
 	response = channel.NewLocalChannel().Run(ctx, "timedatectl", args)
 	if !response.Success {
-    os.Remove(tmpFile)
+		os.Remove(tmpFile)
 		bin.PrintErrAndExit(response.Err)
 	}
 	bin.PrintOutputAndExit(response.Result.(string))
 }
 
 func doResetTimeZone(uid string) {
-  ctx := context.Background()
-  tmpFile := fmt.Sprintf("/tmp/chaos-settz-%s.tmp", uid)
-  defer os.Remove(tmpFile)
+	ctx := context.Background()
+	tmpFile := fmt.Sprintf("/tmp/chaos-settz-%s.tmp", uid)
+	defer os.Remove(tmpFile)
 
-  tzinfo, err := ioutil.ReadFile(tmpFile)
-  if err != nil {
-    bin.PrintErrAndExit(err.Error())
-  }
-  args := fmt.Sprintf("--no-pager --no-ask-password set-timezone %s", string(tzinfo[:]))
+	tzinfo, err := ioutil.ReadFile(tmpFile)
+	if err != nil {
+		bin.PrintErrAndExit(err.Error())
+	}
+	args := fmt.Sprintf("--no-pager --no-ask-password set-timezone %s", string(tzinfo[:]))
 	response := channel.NewLocalChannel().Run(ctx, "timedatectl", args)
 	if !response.Success {
 		bin.PrintErrAndExit(response.Err)
