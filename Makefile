@@ -94,10 +94,10 @@ build_deletefile: exec/bin/file/deletefile/deletefile.go
 build_movefile: exec/bin/file/movefile/movefile.go
 	$(GO) build $(GO_FLAGS) -o $(BUILD_TARGET_BIN)/chaos_movefile $<
 
-build_settime: exec/bin/time/settime.go
+build_settime: exec/bin/settime/settime.go
 	$(GO) build $(GO_FLAGS) -o $(BUILD_TARGET_BIN)/chaos_settime $<
 
-build_settz: exec/bin/time/settz.go
+build_settz: exec/bin/settz/settz.go
 	$(GO) build $(GO_FLAGS) -o $(BUILD_TARGET_BIN)/chaos_settz $<
 
 # build chaosblade linux version by docker image
