@@ -64,14 +64,6 @@ func (*SetTimeActionCommandSpec) LongDesc() string {
 	return "set OS time to specific date time"
 }
 
-func (*SetTimeActionCommandSpec) Matchers() []spec.ExpFlagSpec {
-	return []spec.ExpFlagSpec{}
-}
-
-func (*SetTimeActionCommandSpec) Flags() []spec.ExpFlagSpec {
-	return []spec.ExpFlagSpec{}
-}
-
 // TimeExecutor is one of the OS executor
 type TimeExecutor struct {
 	channel spec.Channel

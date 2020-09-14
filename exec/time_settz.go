@@ -63,14 +63,6 @@ func (*SetTimeZoneActionCommandSpec) LongDesc() string {
 	return "set OS timezone to specific timezone"
 }
 
-func (*SetTimeZoneActionCommandSpec) Matchers() []spec.ExpFlagSpec {
-	return []spec.ExpFlagSpec{}
-}
-
-func (*SetTimeZoneActionCommandSpec) Flags() []spec.ExpFlagSpec {
-	return []spec.ExpFlagSpec{}
-}
-
 // TimeZoneExecutor is one of the OS executor
 type TimeZoneExecutor struct {
 	channel spec.Channel
