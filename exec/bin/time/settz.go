@@ -77,7 +77,6 @@ func doSetTimeZone(uid string, timezone string) {
 func doResetTimeZone(uid string) {
 	ctx := context.Background()
 	tmpFile := fmt.Sprintf("/tmp/chaos-settz-%s.tmp", uid)
-	defer os.Remove(tmpFile)
 
 	tzinfo, err := ioutil.ReadFile(tmpFile)
 	if err != nil {
@@ -88,5 +87,7 @@ func doResetTimeZone(uid string) {
 	if !response.Success {
 		bin.PrintErrAndExit(response.Err)
 	}
+	// if restore tz success, remove the tmp tzinfo
+	os.Remove(tmpFile)
 	bin.PrintOutputAndExit(response.Result.(string))
 }
