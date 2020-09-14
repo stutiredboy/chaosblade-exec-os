@@ -68,7 +68,7 @@ func (*TimeCommandModelSpec) LongDesc() string {
 }
 
 func (*TimeCommandModelSpec) Example() string {
-	return "time set --datetime='2020-09-09 16:48:00'"
+	return "time settime --datetime='2020-09-09 16:48:00'"
 }
 
 // setTimeActionCommand is the Action to run in time executor
@@ -85,7 +85,7 @@ func (*setTimeActionCommand) Aliases() []string {
 }
 
 func (*setTimeActionCommand) ShortDesc() string {
-	return "time set action"
+	return "settime action"
 }
 
 func (*setTimeActionCommand) LongDesc() string {
